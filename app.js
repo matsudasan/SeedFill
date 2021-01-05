@@ -55,14 +55,20 @@ Paint = (x, y) => {
 
   //console.log(leftX,rightX)
 
+  const imagedata = ctx.getImageData(0,0,canvas.width,canvas.height)
   for(let i=leftX; i<=rightX; i++){
-    const imagedata = ctx.getImageData(i, y, 1, 1)
-    imagedata.data[0]=0
-    imagedata.data[1]=0
-    imagedata.data[2]=0
-    ctx.putImageData(imagedata, i, y)
+    //const imagedata = ctx.getImageData(i, y, 1, 1)
+    const index = (i + y * imagedata.width) * 4
+    imagedata.data[index]=0
+    imagedata.data[index+1]=0
+    imagedata.data[index+2]=0
+    imagedata.data[index+3]=255
+    //ctx.putImageData(imagedata, i, y)
     //ctx.putImageData(imagedata,1,1)
   }
+  ctx.putImageData(imagedata,0,0)
+
+
 
   if (y - 1 >= 0) { //下のラインを探索
     Scanline(leftX, rightX, y - 1)
@@ -87,11 +93,19 @@ Scanline = (leftX, rightX, y) => {
   }
 }
 
+//canvasの初期化
 ctx.fillStyle = "white"
 ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-ctx.strokeStyle = "blue"
+/*ctx.strokeStyle = "blue"
 ctx.strokeRect(50, 50, 150, 100)
+*/
+
+ctx.moveTo(10, 50)
+ctx.lineTo(40, 30)
+ctx.lineTo(40, 70)
+ctx.closePath()
+ctx.stroke()
 
 console.log(ctx.getImageData(49, 100, 10, 1))
 console.log(ctx.getImageData(50, 100, 1, 1))
